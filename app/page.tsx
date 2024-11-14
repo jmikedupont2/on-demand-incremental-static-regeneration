@@ -12,13 +12,8 @@ import Explanation from './explanation';
 import { Time } from './time-ago';
 import { Suspense } from 'react';
 
-export default async function Page() {
-  const { issues, forks_count, stargazers_count } =
-    await fetchIssueAndRepoData();
-
-  return (
-    <main className={styles.main}>
-      <Explanation />
+export function Repo(){
+  return (<div>
       <div className={styles.repo}>
         <div className={styles.repo_title}>
           <GitHubIcon />{' '}
@@ -73,7 +68,16 @@ export default async function Page() {
             )}
           </Link>
         ))}
-      </div>
+      </div></div>)
+      }
+
+export default async function Page() {
+  const { issues, forks_count, stargazers_count } =
+    await fetchIssueAndRepoData();
+
+  return (
+    <main className={styles.main}>
+      <Explanation />     
     </main>
   );
 }
