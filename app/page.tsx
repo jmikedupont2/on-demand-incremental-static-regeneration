@@ -15,7 +15,7 @@ import { Suspense } from 'react';
 export async function RepoList(){
   const {repos} = await fetchRepoList();
   console.log("REPOS",repos);
-  return (<div> { [ repos ]}</div>);
+  return (<div> { JSON.stringify( repos )}</div>);
 }
 
 export async function Repo(){
