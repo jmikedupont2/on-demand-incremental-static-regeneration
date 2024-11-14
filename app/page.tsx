@@ -7,12 +7,21 @@ import {
   ForkIcon,
   GitHubIcon,
 } from './icons';
-import { fetchIssueAndRepoData } from '../lib/github';
+import { fetchIssueAndRepoData, fetchRepoList } from '../lib/github';
 import Explanation from './explanation';
 import { Time } from './time-ago';
 import { Suspense } from 'react';
 
-export function Repo(){
+export async function RepoList(){
+  const {repos} = await fetchRepoList();
+  console.log("REPOS",repos);
+  return (<div> { [ repos ]}</div>);
+}
+
+export async function Repo(){
+  const { issues, forks_count, stargazers_count } =
+    await fetchIssueAndRepoData();
+  
   return (<div>
       <div className={styles.repo}>
         <div className={styles.repo_title}>
@@ -72,12 +81,10 @@ export function Repo(){
       }
 
 export default async function Page() {
-  const { issues, forks_count, stargazers_count } =
-    await fetchIssueAndRepoData();
-
   return (
     <main className={styles.main}>
-      <Explanation />     
+      <Explanation />
+      <div>{RepoList()} </div>
     </main>
   );
 }

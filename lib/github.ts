@@ -2,6 +2,9 @@ import 'server-only';
 import jwt from 'jsonwebtoken';
 import { notFound } from 'next/navigation';
 
+// FIXME: remove constant
+const ownerList = [ "jmikedupont2","meta-introspector"]
+
 let accessToken;
 
 async function getAccessToken(installationId: number, token: string) {
@@ -21,7 +24,6 @@ function getGitHubJWT() {
       'GITHUB_APP_ID and GITHUB_APP_PK_PEM must be defined in .env.local'
     );
   }
-
 
   const myjwt= jwt.sign(
     {
@@ -113,6 +115,22 @@ export async function fetchIssueAndRepoData() {
     issues,
     stargazers_count: repoDetails.stargazers_count,
     forks_count: repoDetails.forks_count,
+  };
+}
+
+export async function fetchRepoList() {
+
+  function fetchGitHubWithToken(path) {
+    return fetchGitHub("/users/" + path + "/repos?sort=created&per_page=100", accessToken)
+  }
+  const fetch_all = ownerList.map(fetchGitHubWithToken);
+  const repos = await Promise.all(fetch_all)
+  console.log('[Next.js] Fetching repos');
+  console.log(`[Next.js] Repos: ${repos.length}`);
+
+  return {
+    ownerList,
+    repos
   };
 }
 
