@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { fetchRepoList } from "../../../../../lib/github";
 
-export async function RepoList() {
-  const { repos } = await fetchRepoList();
+export async function RepoList(perPage) {
+  const { repos } = await fetchRepoList(perPage);
   //console.log("REPOS", repos);
   const result = repos.map((a: any) => {
-        console.log("repos2",a);
+    //        console.log("repos2",a);
 	return a.map((repo:any) => {
 	  //console.log("repo",repo)
 	  const repoUrl = `/github/user/${repo.owner.login}/repos/${repo.name}`;

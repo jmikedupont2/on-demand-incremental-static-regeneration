@@ -66,7 +66,7 @@ function createGitHubRequest(path: string, token: string, opts: any = {}) {
 }
 
 export async function fetchGitHub(path: string, token: string, opts: any = {}) {
-  console.log("fetchGitHub",path,opts);
+  //console.log("fetchGitHub",path,opts);
   let req = await createGitHubRequest(path, token, opts);
 
   if (req.status === 401) {
@@ -241,10 +241,10 @@ type Repository = {
 // Type for an array of repositories
 type RepositoriesResponse = Repository[];
 
-export async function fetchRepoList() {
+export async function fetchRepoList(perPage) {
 
   function fetchGitHubWithToken(path) {   
-    const data = fetchGitHub("/users/" + path + "/repos?sort=created&per_page=2", accessToken)
+    const data = fetchGitHub(`/users/${path}/repos?sort=created&per_page=${perPage}`, accessToken)
     return     data;
   }
   const fetch_all = ownerList.map(fetchGitHubWithToken);
