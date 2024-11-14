@@ -1,37 +1,53 @@
-import styles from '../styles/Home.module.scss';
+import styles from '../../../../../../styles/Home.module.scss';
 import Link from "next/link";
 import { Suspense } from "react";
-import { fetchIssueAndRepoData } from "../../../../../lib/github";
-import { GitHubIcon, ForkIcon, StarIcon, IssueIcon, CommentIcon } from "../../../../icons";
-import { Time } from "../../../../time-ago";
+import { fetchIssueAndRepoData } from "../../../../../../lib/github"
+import { CommentIcon, ForkIcon, GitHubIcon, IssueIcon, StarIcon } from '../../../../../icons';
+import { Time } from '../../../../../time-ago';
+//import { GitHubIcon, ForkIcon, StarIcon, IssueIcon, CommentIcon } from "../../../../../../icons";
+//import { Time } from "../../../../../../time-ago";
 
-export async function Repo(){
+// app/github/user/[name]/repos/[repoId]/
+export default async function Page(
+  {
+    params,
+  }:{
+    params: Promise<{ 
+      name:string, 
+      repoId:string }>
+  })
+{
+  const theName = (await params).name;
+  const theRepo = (await params).repoId;
+  //console.log("DEBUG",(await params));
   const { issues, forks_count, stargazers_count } =
-    await fetchIssueAndRepoData();
-   
+    await fetchIssueAndRepoData(theName,theRepo);
+  
   return (<div>
+	    name:{theName}
+  repoId:{theRepo}
       <div className={styles.repo}>
         <div className={styles.repo_title}>
           <GitHubIcon />{' '}
           <a
-            href="https://github.com/vercel/on-demand-isr"
+            href="https://github.com/{name}/{repoId}"
             target="_blank"
             rel="noreferrer"
           >
-            vercel
+            {theName}
           </a>{' '}
-          / <Link href="/">on-demand-isr</Link>
+          / <Link href="/">{theRepo}</Link>
         </div>
         <div className={styles.forks_stars}>
           <a
-            href="https://github.com/vercel/on-demand-isr/fork"
+            href="https://github.com/{name}/{repoId}/fork"
             target="_blank"
             rel="noreferrer"
           >
             <ForkIcon /> {new Number(forks_count).toLocaleString()}
           </a>
           <a
-            href="https://github.com/vercel/on-demand-isr"
+            href="https://github.com/{name}/{repoId}"
             target="_blank"
             rel="noreferrer"
           >

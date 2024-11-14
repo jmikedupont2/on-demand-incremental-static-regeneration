@@ -47,10 +47,15 @@ function markdownToHtml(markdown) {
 export default async function IssuePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string ,
+    user:string,
+    repo:string
+  }>;
 }) {
   const id = (await params).id
-  const { issue, comments } = await fetchIssuePageData(id);
+  const user = (await params).user
+  const repo = (await params).repo
+  const { issue, comments } = await fetchIssuePageData(id,user,repo);
 
   // Filter out comments that contain "bot" in the title
   const filteredComments = comments.filter(

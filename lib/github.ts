@@ -110,15 +110,12 @@ export async function setAccessToken() {
   }
 }
 
-export async function fetchIssueAndRepoData() {
+export async function fetchIssueAndRepoData(user:string, repoId:string) {
   const [issues, repoDetails] = await Promise.all([
-    fetchGitHub('/repos/vercel/on-demand-isr/issues', accessToken),
-    fetchGitHub('/repos/vercel/on-demand-isr', accessToken),
+    fetchGitHub(`/repos/${user}/${repoId}/issues`, accessToken),
+    fetchGitHub(`/repos/${user}/${repoId}`, accessToken)
   ]);
-
-  console.log('[Next.js] Fetching data for /');
-  console.log(`[Next.js] Issues: ${issues.length}`);
-
+  //console.log(`[Next.js] Issues: ${issues.length}`);
   return {
     issues,
     stargazers_count: repoDetails.stargazers_count,
@@ -261,14 +258,14 @@ export async function fetchRepoList() {
   };
 }
 
-export async function fetchIssuePageData(id: string) {
+export async function fetchIssuePageData(id: string, user: string, repoId: string) {
   const [issue, comments, repoDetails] = await Promise.all([
-    fetchGitHub(`/repos/vercel/on-demand-isr/issues/${id}`, accessToken),
+    fetchGitHub(`/repos/${user}/${repoId}/issues/${id}`, accessToken),
     fetchGitHub(
-      `/repos/vercel/on-demand-isr/issues/${id}/comments`,
+      `/repos/${user}/${repoId}/issues/${id}/comments`,
       accessToken
     ),
-    fetchGitHub('/repos/vercel/on-demand-isr', accessToken),
+    fetchGitHub('/repos/${user}/${repoId}', accessToken),
   ]);
 
   console.log(`[Next.js] Fetching data for /${id}`);

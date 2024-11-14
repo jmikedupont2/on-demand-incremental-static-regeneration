@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { fetchRepoList } from "../../../../../lib/github";
-import React from "react";
 
 export async function RepoList() {
   const { repos } = await fetchRepoList();
@@ -9,7 +8,7 @@ export async function RepoList() {
         console.log("repos2",a);
 	return a.map((repo:any) => {
 	  //console.log("repo",repo)
-	  const repoUrl = `/user/${repo.owner.login}/repos/${repo.name}`;
+	  const repoUrl = `/github/user/${repo.owner.login}/repos/${repo.name}`;
 	  return (<div key={repo.id}>
 		    <Link  prefetch={true}  href={repoUrl}
 		    >Repo {repo.full_name}</Link>
