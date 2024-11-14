@@ -1,8 +1,26 @@
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fon-demand-isr&env=GITHUB_WEBHOOK_SECRET,GITHUB_APP_ID,GITHUB_APP_PK_PEM&envDescription=API%20keys%20needed%20to%20connect%20to%20the%20GitHub%20Application.&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fon-demand-isr&demo-title=On-Demand%20ISR&demo-description=Demo%20of%20on-demand%20ISR%20in%20Next.js%2012.1%20using%20GitHub%20Issues.&demo-url=https%3A%2F%2Fon-demand-isr.vercel.app)
 
 # On-Demand Incremental Static Regeneration
+1. start with a static list of users
+1. extract the the resp from all selected users as react queries.
+1. for each user return new query to get the repo summary that returns the element.
+1. Query repos from users in list, allow user to enter and select own user name.
+1. Create a drop down that is prepopulated with repos to select from.
+1. read the source code and artifacts from the repo.
+1. allow for evaluation and rendering of the data from the repo based on rules in the repo/artifact itself using caution and security minded evaluation.
+1. get up and running quickly, and then get it to run quickly next.
 
-Demo of On-demand ISR in [Next.js](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#revalidating-data) using GitHub Issues. When a new issue is created, a webhook from a GitHub App _pushes_ new changes to the deployed application to regenerate the static page.
+## TODOS
+1. improve performance
+1. for each repo fetch its details as a new query.
+1. add hyper links to user pages and repo pages for all repos
+1. add the default users to an multi select list of user.
+1. select the max amount of repos default to 50.
+
+1. precompile data and write it on server in cache directory, save to git if you want.
+1. write react quest cache to disk as json blob in some directory structure based on keys
+1.1. create an ordering of the keys, a hierarchy
+https://tanstack.com/query/latest/docs/framework/react/plugins/createPersister
 
 ## Setup
 
