@@ -1,4 +1,4 @@
-import { fetchRuns } from "../../../../../../../../../lib/github";
+import { fetchRunDetails, fetchRuns } from "../../../../../../../../../lib/github";
 
 function mapJobs(a){return (<div>{a}</div>)}
 
@@ -28,8 +28,4 @@ export default async function Page(
       </div>)
 }
 
-
-function fetchRunDetails(theName: string, theRepo: string, theRun: string): { runData: any; jobsData: any; artifactsData: any; } {
-  throw new Error("Function not implemented.");
-}
 

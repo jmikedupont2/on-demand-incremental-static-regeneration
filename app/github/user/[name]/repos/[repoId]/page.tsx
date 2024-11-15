@@ -19,14 +19,16 @@ export default async function Page(
 {
   const theName = (await params).name;
   const theRepo = (await params).repoId;
-  //console.log("DEBUG",(await params));
   const { issues, forks_count, stargazers_count } =
     await fetchIssueAndRepoData(theName,theRepo);
   
   return (<div>
-	    name:{theName}
-  repoId:{theRepo}
-      <div className={styles.repo}>
+    <div>name:{theName}repoId:{theRepo}</div>
+	  <div>actions: <Link href={`/github/user/${theName}/repos/${theRepo}/actions`}>ActionLink1</Link>
+    <Link href="/github/user/{theName}/repos/{TheRepo}/actions">ActionLink2</Link>
+  done
+</div>
+	     <div className={styles.repo}>
         <div className={styles.repo_title}>
           <GitHubIcon />{' '}
           <a

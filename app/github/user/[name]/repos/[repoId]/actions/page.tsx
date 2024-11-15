@@ -1,5 +1,8 @@
 import Link from "next/link";
-
+import { fetchActionData } from "../../../../../../../lib/github";
+export function mapRun(a){
+  return (<div>Run <div>{a}</div> </div>)  
+}
 export default async function Page(
   {
     params,
@@ -14,12 +17,11 @@ export default async function Page(
   
   const { runs, workflows } = await fetchActionData(theName,theRepo);
     return (<div>
-	    name:{theName}
+      name:{theName}
       repoId:{theRepo}
-      <Link href="/">{theRepo}</Link>
+	      <div>runs:<Link href="./actions/runs">{theRepo}</Link></div>
+	      	      <div>workflows:<Link href="./actions/workflows">{theRepo}</Link></div>
+      {runs.map(mapRun)}
     </div>)
-}
-function fetchActionData(theName: string, theRepo: string): { runs: any; workflows: any; } | PromiseLike<{ runs: any; workflows: any; }> {
-  throw new Error("Function not implemented.");
 }
 

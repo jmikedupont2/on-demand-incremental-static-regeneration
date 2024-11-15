@@ -1,3 +1,4 @@
+import { fetchGithubArtifact } from "../../../../../../../../../../../lib/github";
 
 export default async function Page(
   {
@@ -16,11 +17,13 @@ export default async function Page(
   const theRepo = params2.repoId;
   const theRun = params2.runId;
   const theArtifact = params2.artifactId;
-  ///const { issues, forks_count, stargazers_count } =   await fetchIssueAndRepoData(theName,theRepo); 
+  const { artifact2 } =   await fetchGithubArtifact(theName,theRepo,theRun,theArtifact); 
   return (<div>
 	    name:{theName}
       repoId:{theRepo}
       run:{theRun}
-      artifact:{theArtifact}
+	    artifact:{theArtifact}
+	    {artifact2}
       </div>)
     }
+

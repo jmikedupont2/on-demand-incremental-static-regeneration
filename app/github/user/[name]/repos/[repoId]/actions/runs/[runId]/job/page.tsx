@@ -22,7 +22,4 @@ export default async function Page(
 
       </div>)
     }
-function getJobs(theName: string, theRepo: string, theRun: string): { jobList: any; } {
-  throw new Error("Function not implemented.");
-}
 
