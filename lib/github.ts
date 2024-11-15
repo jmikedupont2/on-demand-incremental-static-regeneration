@@ -241,6 +241,11 @@ type Repository = {
 // Type for an array of repositories
 type RepositoriesResponse = Repository[];
 
+export async function fetchRuns(user:string,repo:string){
+  return {runs:[]}
+}
+
+
 export async function fetchRepoList(perPage) {
 
   function fetchGitHubWithToken(path) {   
