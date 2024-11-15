@@ -1,6 +1,9 @@
-import { fetchRuns } from "../../../../../../../../lib/github"
+"use client"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { fetchRuns, WorkflowRun } from "../../../../../../../../lib/github"
 import { fetchActionData, fetchRunDetails, getJobs } from "../../../../../../../../lib/github"
-
+import { Badge} from "@/components/ui/badge"
 export default async function Page(
   {
     params,
@@ -16,7 +19,7 @@ export default async function Page(
   
   return (<div>
   name:{theName}
-	            <WorkflowRunsList owner={owner} repo={repo} />
+	            <WorkflowRunsList owner={theName} repo={theRepo} />
       {runs.map((a)=><div>{a}</div>)}
       </div>)
       }
@@ -49,12 +52,12 @@ export const WorkflowRunsList = ({ owner, repo }) => {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Workflow Runs</h2>
       <div className="grid gap-4">
-        {data.runs.map((run) => (
+        {data.runs.map((run: WorkflowRun) => (
           <Card key={run.id}>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>{run.name}</span>
-                <StatusBadge status={run.status} conclusion={run.conclusion} />
+                <Badge> status={run.status} conclusion={run.conclusion} </Badge>
               </CardTitle>
               <CardDescription>
                 Branch: {run.head_branch} • Commit: {run.head_sha.substring(0, 7)}

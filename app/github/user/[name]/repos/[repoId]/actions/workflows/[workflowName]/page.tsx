@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-//import { fetchWorkflow } from "../../../../../../../../../lib/github"
+import { fetchWorkflow, Workflow } from "../../../../../../../../../lib/github"
 export default async function Page(
   {
     params,
@@ -13,10 +13,9 @@ export default async function Page(
   })
 {
   const {userName,repoId, workflowName} = await params
-  const wf = fetchWorkflow(userName,repoId,workflowName)
-  return (<div>{wf}</div>)
+  const wf :Workflow= await fetchWorkflow(userName,repoId,workflowName)
+  if (wf){
+  return (<div>{wf.name}</div>)
 }
-function fetchWorkflow(userName: string, repoId: string, workflowName: string) : ReactNode{
-  throw new Error("Function not implemented.")
 }
 

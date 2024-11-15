@@ -1,3 +1,4 @@
+import { getJobs } from "@/lib/github";
 
 export default async function Page(
   {
@@ -14,7 +15,7 @@ export default async function Page(
   const theName = params2.name;
   const theRepo = params2.repoId;
   const theRun = params2.runId;
-  const {jobList} = getJobs(theName,theRepo,theRun);
+  const {jobList} = await getJobs(theName,theRepo,theRun);
   return (<div>
 	    name:{theName}
       repoId:{theRepo}

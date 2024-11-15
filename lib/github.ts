@@ -1,11 +1,11 @@
-import 'server-only';
+//import 'server-only';
 import jwt from 'jsonwebtoken';
 import { notFound } from 'next/navigation';
 
 // FIXME: remove constant
 const ownerList = [ "jmikedupont2","meta-introspector"]
 
-let accessToken;
+let accessToken:string;
 
 async function getAccessToken(installationId: number, token: string) {
 
@@ -123,7 +123,7 @@ export async function fetchIssueAndRepoData(user:string, repoId:string) {
   };
 }
 
-type Repository = {
+export type Repository = {
   id: number;
   node_id: string;
   name: string;
@@ -370,7 +370,7 @@ export async function fetchGithubArtifact(
 }
 
 // Add TypeScript interfaces for better type safety
-interface WorkflowRun {
+export interface WorkflowRun {
   id: number;
   name: string;
   head_branch: string;
@@ -382,7 +382,7 @@ interface WorkflowRun {
   updated_at: string;
 }
 
-interface Workflow {
+export interface Workflow {
   id: number;
   name: string;
   path: string;
@@ -391,7 +391,7 @@ interface Workflow {
   updated_at: string;
 }
 
-interface Job {
+export interface Job {
   id: number;
   run_id: number;
   name: string;
@@ -407,7 +407,7 @@ interface Job {
   }>;
 }
 
-interface Artifact {
+export interface Artifact {
   id: number;
   name: string;
   size_in_bytes: number;
@@ -427,4 +427,12 @@ export async function fetchWorkflows(theName: string, theRepo: string) {
   return {
     workflows: response.workflows || []
   };
+}
+
+export async function fetchWorkflow(theName: string, theRepo: string, workflow:string): Promise<Workflow> {
+  const response = await fetchGitHub(
+    `/repos/${theName}/${theRepo}/actions/workflows/${workflow}`,
+    accessToken
+  );
+  return  response;
 }

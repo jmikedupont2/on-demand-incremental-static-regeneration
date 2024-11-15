@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { fetchActionData } from "../../../../../../../lib/github";
-export function mapRun(a){
+function mapRun(a){
   return (<div>Run <div>{a}</div> </div>)  
 }
 export default async function Page(

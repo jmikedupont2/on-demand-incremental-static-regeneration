@@ -1,6 +1,6 @@
 import { fetchRunDetails, fetchRuns } from "../../../../../../../../../lib/github";
 
-function mapJobs(a){return (<div>{a}</div>)}
+function mapJobs(a){return (<div>{a.name}</div>)}
 
 export default async function Page(
   {
@@ -17,14 +17,14 @@ export default async function Page(
   const theName = params2.name;
   const theRepo = params2.repoId;
   const theRun = params2.runId;
-
-  const {runData,jobsData,artifactsData} = fetchRunDetails(theName,theRepo,theRun)
+  const {//runData,
+    jobsData,artifactsData} = await fetchRunDetails(theName,theRepo,theRun)
   return (<div>
 	    name:{theName}
       repoId:{theRepo}
       run:{theRun}
-      jobsData.map(mapJobs)
-      artifactsData.map(mapJobs)
+      {jobsData.map(mapJobs)}
+      {artifactsData.map(mapJobs)}
       </div>)
 }
 
