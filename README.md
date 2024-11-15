@@ -53,3 +53,17 @@ $ bun dev
 ## Learn More
 
 - [Read the documentation](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#revalidating-data)
+
+## Steps
+
+```
+  pnpm install -D tailwindcss postcss autoprefixer  --force
+  pnpm dlx tailwindcss init -p
+  ```
+  
+  Now add the components used by claude.ai its code.
+  ```
+  pnpm dlx shadcn@latest add card 
+  pnpm dlx shadcn@latest add button
+  pnpm dlx shadcn@latest add badge
+```

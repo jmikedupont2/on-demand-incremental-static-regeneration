@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import { fetchWorkflows } from '../../../../../../../../lib/github';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Activity, Clock, GitBranch, Play, Settings } from 'lucide-react';
-import WorkflowDashboard from './components/WorkflowDashboard';
 
-export default async function Page(
+export async function PageOld(
   {
     params,
   }:{
@@ -183,7 +182,7 @@ export const WorkflowsList = ({ owner, repo, onWorkflowSelect }: WorkflowsListPr
 };
 
 // Example usage component
-export default function WorkflowDashboard({ owner, repo }: { owner: string; repo: string }) {
+export function WorkflowDashboard({ owner, repo }: { owner: string; repo: string }) {
   const handleWorkflowSelect = (workflow: Workflow) => {
     console.log('Selected workflow:', workflow);
     // Handle workflow selection, e.g., navigate to workflow details
@@ -209,8 +208,7 @@ export default function WorkflowDashboard({ owner, repo }: { owner: string; repo
   );
 }
 
-
-export default function WorkflowsPage() {
+export default function WorkflowsPage2() {
   return (
     <WorkflowDashboard 
       owner="your-org" 
