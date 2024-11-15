@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { fetchGithubArtifact } from "../../../../../../../../../../../lib/github";
+import { fetchGithubArtifact } from "../../../../../../../../../../../../lib/github";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-
 
 export default async function Page(
   {
