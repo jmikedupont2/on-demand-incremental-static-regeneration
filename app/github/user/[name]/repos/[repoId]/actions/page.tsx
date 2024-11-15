@@ -16,7 +16,7 @@ export default async function Page(
   const theRepo = (await params).repoId;
   
   const { runs, workflows } = await fetchActionData(theName,theRepo);
-    return (<div>
+    return (<div key="Runs{theName}{theRepo}">
       name:{theName}
       repoId:{theRepo}
 	      <div>runs:<Link href="./actions/runs">{theRepo}</Link></div>

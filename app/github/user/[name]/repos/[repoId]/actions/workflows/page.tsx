@@ -1,12 +1,11 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+//import React, { useState, useEffect } from 'react';
 import { fetchWorkflows } from '../../../../../../../../lib/github';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Activity, Clock, GitBranch, Play, Settings } from 'lucide-react';
 
-export async function PageOld(
+export default async function Page(
   {
     params,
   }:{
@@ -17,12 +16,20 @@ export async function PageOld(
 {
   const theName = (await params).name;
   const theRepo = (await params).repoId;
+  //const result = await fetchWorkflows(owner, repo);
   const { workflows } =  await fetchWorkflows(theName,theRepo);
-  return (<div>    name:{theName}    repoId:{theRepo} {
-    workflows.map((a)=>{
-      return (<div>{a}</div>)
-  })
-  } </div>)
+  return (<div>    name:{theName}    repoId:{theRepo}
+
+	    {
+	      // a simple map
+	      workflows.map((a:any)=>{return (<div>{a}</div>)})}
+    <WorkflowDashboard 
+      owner="your-org" 
+      repo="your-repo"
+      workflows={workflows}
+    />
+	  </div>  
+  );
 }
 
 interface Workflow {
@@ -38,39 +45,38 @@ interface Workflow {
   badge_url: string;
 }
 
-interface WorkflowsResponse {
-  total_count: number;
-  workflows: Workflow[];
-}
+//interface WorkflowsResponse {
+//  total_count: number;
+//  workflows: Workflow[];
+//}
 
 
 interface WorkflowsListProps {
   owner: string;
   repo: string;
+  workflows: any;
   onWorkflowSelect?: (workflow: Workflow) => void;
 }
 
-export const WorkflowsList = ({ owner, repo, onWorkflowSelect }: WorkflowsListProps) => {
-  const [data, setData] = useState<{ workflows: Workflow[] }>({ workflows: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  //  const [data, setData] = useState<{ workflows: Workflow[] }>({ workflows: [] });
+  //  const [loading, setLoading] = useState(true);
+  //  const [error, setError] = useState<string | null>(null);
+  //  useEffect(() => {
+  //    const fetchData = async () => {
+  //      try {
+  //        setLoading(true);
+  //setData(result);
+  //} catch (err) {
+  //        setError(err instanceof Error ? err.message : 'An error occurred');
+  //      } finally {
+  //        setLoading(false);
+  //      }
+  //    };
+  //fetchData();
+  //  }, [owner, repo]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const result = await fetchWorkflows(owner, repo);
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [owner, repo]);
-
+const WorkflowsList = ({ //owner, repo,
+  onWorkflowSelect, workflows }: WorkflowsListProps) => {
   const getWorkflowIcon = (path: string) => {
     if (path.includes('deploy')) return <Activity className="w-4 h-4" />;
     if (path.includes('build')) return <Settings className="w-4 h-4" />;
@@ -89,27 +95,27 @@ export const WorkflowsList = ({ owner, repo, onWorkflowSelect }: WorkflowsListPr
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="h-24" />
-          </Card>
-        ))}
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="space-y-4">
+  //       {[1, 2, 3].map((i) => (
+  //         <Card key={i} className="animate-pulse">
+  //           <CardContent className="h-24" />
+  //         </Card>
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <Card className="bg-red-50">
-        <CardContent className="p-4">
-          <div className="text-red-500">Error loading workflows: {error}</div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <Card className="bg-red-50">
+  //       <CardContent className="p-4">
+  //         <div className="text-red-500">Error loading workflows: {error}</div>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // }
 
   return (
     <div className="space-y-4">
@@ -117,12 +123,12 @@ export const WorkflowsList = ({ owner, repo, onWorkflowSelect }: WorkflowsListPr
         <h2 className="text-2xl font-bold">Workflows</h2>
         <Badge variant="secondary" className="flex items-center gap-1">
           <Clock className="w-4 h-4" />
-          {data.workflows.length} total
+          {workflows.length} total
         </Badge>
       </div>
 
       <div className="grid gap-4">
-        {data.workflows.map((workflow) => (
+        {workflows.map((workflow) => (
           <Card 
             key={workflow.id}
             className="hover:shadow-md transition-shadow cursor-pointer"
@@ -183,7 +189,7 @@ export const WorkflowsList = ({ owner, repo, onWorkflowSelect }: WorkflowsListPr
 };
 
 // Example usage component
-export function WorkflowDashboard({ owner, repo }: { owner: string; repo: string }) {
+function WorkflowDashboard({ owner, repo, workflows }: { owner: string; repo: string, workflows:any }) {
   const handleWorkflowSelect = (workflow: Workflow) => {
     console.log('Selected workflow:', workflow);
     // Handle workflow selection, e.g., navigate to workflow details
@@ -203,18 +209,10 @@ export function WorkflowDashboard({ owner, repo }: { owner: string; repo: string
       <WorkflowsList 
         owner={owner} 
         repo={repo}
+	workflows={workflows}
         onWorkflowSelect={handleWorkflowSelect}
       />
     </div>
-  );
-}
-
-export default function WorkflowsPage2() {
-  return (
-    <WorkflowDashboard 
-      owner="your-org" 
-      repo="your-repo" 
-    />
   );
 }
 

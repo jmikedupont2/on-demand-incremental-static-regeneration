@@ -241,9 +241,6 @@ export type Repository = {
 // Type for an array of repositories
 type RepositoriesResponse = Repository[];
 
-//export async function fetchRuns(user:string,repo:string){
-//  return {runs:[]}
-//}
 
 export async function fetchRepoList(perPage) {
 
@@ -292,7 +289,8 @@ export async function fetchRuns(user: string, repo: string) {
     `/repos/${user}/${repo}/actions/runs`,
     accessToken
   );
-  
+
+  //  console.log("RUNS",runs);
   return { runs: runs.workflow_runs || [] };
 }
 
