@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { fetchActionData } from "../../../../../../../lib/github";
 function mapRun(a){
-  const url = `./actions/${a.id}`
+  const url = `./actions/runs/${a.id}`
   return (<div key={a.id}>
 	   <Link href={url}>run {a.id}</Link>
 	  </div>)  
