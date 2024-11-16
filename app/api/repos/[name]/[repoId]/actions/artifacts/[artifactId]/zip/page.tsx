@@ -31,10 +31,13 @@ const username = name;
     console.log("res",response);
     //response.body?.pipe(res);
     // {response.body }
-    return (<div>OK</div>)
+    function reportFile(a:any){
+      return (<div key={a.fileName}>Nodes:{a.fileName}/{a.nodes.length}</div>)
+    }
+    return (<div>Unzip { response.map( reportFile )}</div>)
     //  } catch (error) {
     //    console.error("Error downloading artifact:", error);
-    //    return (<div>{JSON.stringify(error) }</div>)
+    //    return (<div>{
     //res.status(500).json({ error: "Internal Server Error" });
     //  }
 }
