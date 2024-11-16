@@ -6,10 +6,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.693.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@types/unzip-stream": "^0.3.4",
     "adm-zip": "^0.5.16",
-    "aws-sdk": "^2.1692.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "highlight.js": "^11.9.0",
@@ -22,10 +21,12 @@
     "react-dom": "rc",
     "sass": "^1.77.6",
     "server-only": "^0.0.1",
+    "stream": "^0.0.3",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "tar": "^7.4.3",
-    "unzipper": "^0.12.3"
+    "unzip-stream": "^0.3.4",
+    "vercel": "^37.0.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.6",

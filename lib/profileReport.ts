@@ -1,10 +1,10 @@
 import 'server-only';
-import jwt from 'jsonwebtoken';
-import { notFound } from 'next/navigation';
+//import jwt from 'jsonwebtoken';
+//import { notFound } from 'next/navigation';
 //import { finished, Readable } from 'stream';
 //import AdmZip from 'adm-zip';
 import * as fs from 'fs';
-import unzipper from 'unzipper';
+import * as unzip from 'unzip-stream';
 import * as tar from 'tar';
 import { fetchGitHubStream } from './github';
 
@@ -41,7 +41,7 @@ async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
   
   return new Promise((resolve, reject) => {
     console.log("in promise");
-    const unzipStream = fs.createReadStream(zipFilePath).pipe(unzipper.Extract({ path: destPath }));
+    const unzipStream = fs.createReadStream(zipFilePath).pipe(unzip.Extract({ path: destPath }));
     unzipStream.on('close', resolve);
     unzipStream.on('error', reject);
     console.log("return", unzipStream);
@@ -51,10 +51,10 @@ async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
 // Function to untar the .tar file
 async function untarFile(tarFilePath: string, destPath: string): Promise<void> {
   console.log("unTar ",tarFilePath,destPath);
-  await tar.x({
-    file: tarFilePath,
-    C: destPath // Extract to the same directory
-  });
+  //await tar.x({
+  //      file: tarFilePath,
+  //    C: destPath // Extract to the same directory
+  //  });
   console.log("Tar extraction complete");
 }
 
@@ -85,7 +85,7 @@ export async function readZip(path: string, filename:string) {
   const tarFilePath = path + "/perf.data.tar.gz";
   if (!fs.existsSync(tarFilePath)) {
     console.log("going to unzip",zipFilePath, " to get ", tarFilePath);
-    await unzipFile(zipFilePath, path);
+    //await unzipFile(zipFilePath, path);
     console.log("Unzip complete");
   }
   
@@ -98,7 +98,7 @@ export async function readZip(path: string, filename:string) {
   }
   const profilepath = path + "/profile";
   if (!fs.existsSync(profilepath)) {
-    await untarFile(tarFilePath, path);
+    //    await untarFile(tarFilePath, path);
   }
   else {
     console.log("tar already unpacked");
