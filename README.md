@@ -9,16 +9,16 @@
 1. read the source code and artifacts from the repo.
 1. allow for evaluation and rendering of the data from the repo based on rules in the repo/artifact itself using caution and security minded evaluation.
 1. get up and running quickly, and then get it to run quickly next.
+1. for each repo fetch its details as a new query.
+1. write react quest cache to disk as json blob in some directory structure based on keys
 
 ## TODOS
 1. improve performance
-1. for each repo fetch its details as a new query.
 1. add hyper links to user pages and repo pages for all repos
 1. add the default users to an multi select list of user.
 1. select the max amount of repos default to 50.
-
 1. precompile data and write it on server in cache directory, save to git if you want.
-1. write react quest cache to disk as json blob in some directory structure based on keys
+
 1.1. create an ordering of the keys, a hierarchy
 https://tanstack.com/query/latest/docs/framework/react/plugins/createPersister
 
