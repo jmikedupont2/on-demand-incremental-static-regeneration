@@ -458,137 +458,42 @@ export async function fetchWorkflow(theName: string, theRepo: string, workflow:s
   return  response;
 }
 
-export async function fetchArtifactZip(username: string, reponame: string, artifactId:string): Promise<any[]> {
-  console.log("DEBUG1",username,reponame,artifactId)
-  const response = await fetchGitHubStream2(
-    `/repos/${username}/${reponame}/actions/artifacts/${artifactId}/zip`,
-    accessToken
-  );
-  console.log("RES",response);
-  return  response;
-}
+export async function fetchGitHubStream(path: string): Promise<string> {
+  const newpath = "cache" + path;
+  const cachePath = newpath + "/data.zip";
 
-// Function to unzip the file
-async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
-  //console.log("unzipfile",zipFilePath,destPath)
-  
-  return new Promise((resolve, reject) => {
-    //    console.log("in promise");
-    const unzipStream = fs.createReadStream(zipFilePath).pipe(unzipper.Extract({ path: destPath }));
-    unzipStream.on('close', resolve);
-    unzipStream.on('error', reject);
-    //    console.log("ostream", unzipStream);
-  });
-}
+  console.log("fetchGitHubStream", cachePath);
 
-// Function to untar the .tar file
-async function untarFile(tarFilePath: string, destPath: string): Promise<void> {
-  console.log("unTar ",tarFilePath,destPath);
-  await tar.x({
-    file: tarFilePath,
-    C: destPath // Extract to the same directory
-  });
-  console.log("Tar extraction complete");
-}
-
-
-// Function to process the JSON files
-async function processJsonFiles(directory: string): Promise<void> {
-  const jsonFiles = await fs.promises.readdir(directory);
-  let profiles = [];
-  for (const file of jsonFiles) {
-    if (file.endsWith('.cpuprofile')) {
-      const filePath = directory + "/" + file;
-      const jsonData = await fs.promises.readFile(filePath, 'utf-8');
-      const parsedJson = JSON.parse(jsonData);
-      parsedJson.fileName = file;
-      console.log("Parsed JSON blob:", parsedJson);
-      profiles.push(parsedJson)
-      // Further processing can be done here
-    }
-  }
-  return profiles;
-}
-
-// Main function to fetch and process the GitHub stream
-export async function readZip(path: string, filename:string) {
-  const zipFilePath = path + filename;
-  console.log("readzip",zipFilePath);
-  // Step 1: Unzip the file
-  await unzipFile(zipFilePath, path);
-  console.log("Unzip complete");
-
-  // Step 2: Find and untar the .tar file inside the extracted zip
-  const tarFilePath = path + "/perf.data.tar.gz";
-  console.log("TAR",tarFilePath);
-  if (!fs.existsSync(tarFilePath)) {
-    console.error("No tar file found inside the zip archive");
-    return;
-  }
-  const profilepath = path + "/profile";
-  if (!fs.existsSync(profilepath)) {
-    // Untar the tar file
-    await untarFile(tarFilePath, path);
-  }
-  else {
-    console.log("tar already unpacked");
-  }
-  // Step 3: Read and process JSON files from extracted files
-  const files = await processJsonFiles(profilepath);
-
-  return files;
-}
-
-export async function fetchGitHubStream2(path: string, token: string, opts: any = {}) {
-  console.log("fetchGitHubStream", path);
-
-  // Check if the cache exists
-  const cachePath = "cache" + path + "/data.zip"; 
   if (fs.existsSync(cachePath)) {
     console.log(`Cache exists at ${cachePath}, skipping fetch.`);
-    //report = await readZip("cache" + path ,  "/data.zip" );
-    //    return {};  // Optionally return the cached content
   }
-  else {
 
-    let req = await createGitHubRequest(path, token, opts);
-    if (req.status === 401) {
-      // JWT has expired, cache a new token
-      await setAccessToken();
-      // Retry request with new cached access token
-      req = await createGitHubRequest(path, accessToken, opts);
-    }
+  let req = await createGitHubRequest(path, accessToken, {});
+  if (req.status === 401) {
+    // JWT has expired, cache a new token
+    await setAccessToken();
+    // Retry request with new cached access token
+    req = await createGitHubRequest(path, accessToken, {});
+  }  
+  if (req.status !== 200) {
+    console.error('Failed to fetch GitHub stream:', req.status);
+    return "error";
+  }  
+  const buffer = Buffer.from(await req.arrayBuffer());
 
-    if (req.status !== 200) {
-      console.error('Failed to fetch GitHub stream:', req.status);
+  fs.mkdir(newpath, { recursive: true }, (err) => {
+    if (err) {
+      console.error("Error creating cache directory", err);
       return;
     }
-    
-    console.log("res", req);
-    const buffer = Buffer.from(await req.arrayBuffer());
-    console.log("buffer", buffer);
-    
-    // Create cache directory if not exists
-    const newpath = "cache" + path;
-    fs.mkdir(newpath, { recursive: true }, (err) => {
+    // Write file to the cache
+    fs.writeFile(cachePath, buffer, (err) => {
       if (err) {
-	console.error("Error creating cache directory", err);
-	return;
+        console.error("Error writing file", err);
+      } else {
+        console.log("File saved to cache");
       }
-      
-      // Write file to the cache
-      fs.writeFile(newpath + "/data.zip", buffer, (err) => {
-	if (err) {
-          console.error("Error writing file", err);
-	} else {
-          console.log("File saved to cache");
-	}
-      });
     });
-
-  }
-
-  const returnData = await readZip("cache" + path ,  "/data.zip" );
-  
-  return returnData;
+    });
+  return cachePath
 }

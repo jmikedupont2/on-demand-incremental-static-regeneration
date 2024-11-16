@@ -1,4 +1,4 @@
-import { fetchArtifactZip } from "@/lib/github";
+import { fetchArtifactZip } from "@/lib/profileReport";
 //import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function Page(  {

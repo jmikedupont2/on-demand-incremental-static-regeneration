@@ -36,3 +36,4 @@ yarn-error.log*
 .output
 /tailwind.config.js~
 /cache/
+/lib/profileReport.ts~
