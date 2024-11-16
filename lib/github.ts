@@ -502,10 +502,76 @@ interface SomeDownload{
 
 export async function fetchArtifactZip(username: string, reponame: string, artifactId:string): Promise<SomeDownload> {
   console.log("DEBUG1",username,reponame,artifactId)
-  const response = await fetchGitHubStream(
+  const response = await fetchGitHubStream2(
     `/repos/${username}/${reponame}/actions/artifacts/${artifactId}/zip`,
     accessToken
   );
   console.log("RES",response);
   return  {body : response};
+}
+
+
+////
+
+
+//import * as fs from 'fs';
+//import * as path from 'path';
+//import { diskUsage } from 'diskusage';  // Example library for disk space check
+
+export async function fetchGitHubStream2(path: string, token: string, opts: any = {}) {
+  console.log("fetchGitHubStream", path);
+
+  // Check if the cache exists
+  const cachePath = "cache" + path + "/data.zip"; 
+  if (fs.existsSync(cachePath)) {
+    console.log(`Cache exists at ${cachePath}, skipping fetch.`);
+    return {};  // Optionally return the cached content
+  }
+  else {
+    console.log(`Cache does not exists at ${cachePath}, going to fetch.`);
+  }
+
+  // Check if there is enough disk space before proceeding (example with diskusage library)
+  //  const space = await diskUsage.check('/');
+  //  if (space.available < 1000000000) { // 1 GB free space threshold
+  //    console.error('Insufficient disk space');
+  //    return; 
+  //  }
+
+  let req = await createGitHubRequest(path, token, opts);
+  if (req.status === 401) {
+    // JWT has expired, cache a new token
+    await setAccessToken();
+    // Retry request with new cached access token
+    req = await createGitHubRequest(path, accessToken, opts);
+  }
+
+  if (req.status !== 200) {
+    console.error('Failed to fetch GitHub stream:', req.status);
+    return;
+  }
+
+  console.log("res", req);
+  const buffer = Buffer.from(await req.arrayBuffer());
+  console.log("buffer", buffer);
+
+  // Create cache directory if not exists
+  const newpath = "cache" + path;
+  fs.mkdir(newpath, { recursive: true }, (err) => {
+    if (err) {
+      console.error("Error creating cache directory", err);
+      return;
+    }
+
+    // Write file to the cache
+    fs.writeFile(newpath + "/data.zip", buffer, (err) => {
+      if (err) {
+        console.error("Error writing file", err);
+      } else {
+        console.log("File saved to cache");
+      }
+    });
+  });
+
+  return {};
 }
