@@ -1,11 +1,106 @@
 import 'server-only';
 import jwt from 'jsonwebtoken';
 import { notFound } from 'next/navigation';
+import { finished, Readable } from 'stream';
+import AdmZip from 'adm-zip';
 
 // FIXME: remove constant
 const ownerList = [ "jmikedupont2","meta-introspector"]
 
 let accessToken:string;
+
+function createGitHubRequest(path: string, token: string, opts: any = {}) {
+  return fetch(`https://api.github.com${path}`, {
+    ...opts,
+    headers: {
+      ...opts.headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+}
+
+//octokit.actions.downloadArtifact({owner, repo, artifact_id, archive_format});
+function createGitHubRequestStream(path: string, token: string, opts: any = {}) {
+  return fetch(`https://api.github.com${path}`, {
+    ...opts,
+    headers: {
+      ...opts.headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      //,
+      //      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+}
+
+export async function fetchGitHub(path: string, token: string, opts: any = {}) {
+  console.log("fetchGitHub",path,opts);
+  let req = await createGitHubRequest(path, token, opts);
+
+  if (req.status === 401) {
+    // JWT has expired, cache a new token
+    await setAccessToken();
+    // Retry request with new cached access token
+    req = await createGitHubRequestStream(path, accessToken, opts);
+  }
+
+  const ret1= req.json();
+
+  // idea was to wrap the results and add in the arguments as meta to the response
+  // but on second thought most of that data will be in the results already
+  // const result = {
+  //   meta: meta,
+  //   path: path,
+  //   result: ret1
+  // }  
+  // return result;
+  return ret1;
+}
+
+import * as fs from 'fs';
+export async function fetchGitHubStream(path: string, token: string, opts: any = {}) {
+  console.log("fetchGitHubStream",path);
+
+  // FIXME: TODO : first let check if the cache exists, these files dont change
+  // FIXME: TODO : lets check if there is disk space left
+  
+  let req = await createGitHubRequest(path, token, opts);
+  if (req.status === 401) {
+  //   // JWT has expired, cache a new token
+     await setAccessToken();
+  //   // Retry request with new cached access token
+    req = await createGitHubRequest(path, accessToken, opts);
+  }
+  console.log("res",req);
+  const buffer = Buffer.from(await req.arrayBuffer());
+  console.log("buffer",buffer);
+  function callback(a:any){
+    console.log("callback",a);
+  }
+  const newpath = "cache" + path;
+  console.log("newpath",newpath);
+  fs.mkdir(newpath, { recursive:true }, callback);
+  fs.writeFile(newpath+"/data.zip",buffer, callback);
+  //try {
+   // const zip = new AdmZip(buffer);
+   // const zipEntries = zip.getEntries();
+   // console.log("ENTRIES", zipEntries);
+  //}
+  //  console.log("req",req.toString());
+  //  console.log("status",req.status);
+  //const stream = fs.createWriteStream('output.txt');
+  
+  //console.log("BODY",body1)
+  //finished(Readable.fromWeb(body).pipe(stream));
+  
+  // console.log("DATA",req.data);
+  // console.log("DEBUG",req.data);
+  // const ret1= req.data;
+
+  return {};
+}
 
 async function getAccessToken(installationId: number, token: string) {
 
@@ -53,41 +148,7 @@ async function getInstallation(token: string) {
   return installations.find(check);
 }
 
-function createGitHubRequest(path: string, token: string, opts: any = {}) {
-  return fetch(`https://api.github.com${path}`, {
-    ...opts,
-    headers: {
-      ...opts.headers,
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-}
 
-export async function fetchGitHub(path: string, token: string, opts: any = {}) {
-  //console.log("fetchGitHub",path,opts);
-  let req = await createGitHubRequest(path, token, opts);
-
-  if (req.status === 401) {
-    // JWT has expired, cache a new token
-    await setAccessToken();
-    // Retry request with new cached access token
-    req = await createGitHubRequest(path, accessToken, opts);
-  }
-
-  const ret1= req.json();
-
-  // idea was to wrap the results and add in the arguments as meta to the response
-  // but on second thought most of that data will be in the results already
-  // const result = {
-  //   meta: meta,
-  //   path: path,
-  //   result: ret1
-  // }  
-  // return result;
-  return ret1;
-}
 
 export async function readAccessToken() {
   // check if exists
@@ -433,4 +494,18 @@ export async function fetchWorkflow(theName: string, theRepo: string, workflow:s
     accessToken
   );
   return  response;
+}
+
+interface SomeDownload{
+  body:any
+}
+
+export async function fetchArtifactZip(username: string, reponame: string, artifactId:string): Promise<SomeDownload> {
+  console.log("DEBUG1",username,reponame,artifactId)
+  const response = await fetchGitHubStream(
+    `/repos/${username}/${reponame}/actions/artifacts/${artifactId}/zip`,
+    accessToken
+  );
+  console.log("RES",response);
+  return  {body : response};
 }
