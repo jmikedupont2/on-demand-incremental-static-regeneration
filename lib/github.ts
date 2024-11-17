@@ -267,8 +267,9 @@ type RepositoriesResponse = Repository[];
 
 export async function fetchRepoList(perPage) {
 
-  function fetchGitHubWithToken(path) {   
-    const data = fetchGitHub(`/users/${path}/repos?sort=created&per_page=${perPage}`, accessToken)
+  function fetchGitHubWithToken(path) {
+    // &per_page=${perPage} FIXME: perpage
+    const data = fetchGitHub(`/users/${path}/repos?sort=created`, accessToken)
     return     data;
   }
   const fetch_all = ownerList.map(fetchGitHubWithToken);
