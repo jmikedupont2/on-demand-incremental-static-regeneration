@@ -20,15 +20,15 @@ export default function IssueLayout({
         <div className={styles.repo_title}>
           <GitHubIcon />{' '}
           <a
-            href="https://github.com/vercel/on-demand-isr"
+            href="https://github.com/jmikedupont2/on-demand-incremental-static-regeneration"
             target="_blank"
             rel="noreferrer"
           >
-            vercel
+            This project
           </a>{' '}
           / <Link href="/">on-demand-isr</Link> /{' '}
           <a
-            href={`https://github.com/vercel/on-demand-isr/issues/${id}`}
+            href={`https://github.com/jmikedupont2/on-demand-incremental-static-regeneration/issues/${id}`}
             target="_blank"
             rel="noreferrer"
           >
@@ -37,7 +37,7 @@ export default function IssueLayout({
         </div>
         <div className={styles.issue_comments}>
           <a
-            href={`https://github.com/vercel/on-demand-isr/issues/${id}`}
+            href={`https://github.com/jmikedupont2/on-demand-incremental-static-regeneration/issues/${id}`}
             target="_blank"
             rel="noreferrer"
           >

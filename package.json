@@ -12,6 +12,7 @@
     "adm-zip": "^0.5.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "fs": "0.0.1-security",
     "gunzip-maybe": "^1.4.2",
     "highlight.js": "^11.9.0",
     "jsonwebtoken": "^9.0.2",

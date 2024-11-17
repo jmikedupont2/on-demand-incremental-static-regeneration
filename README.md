@@ -67,3 +67,33 @@ $ bun dev
   pnpm dlx shadcn@latest add button
   pnpm dlx shadcn@latest add badge
 ```
+
+# Issues
+
+## Missing tar
+`tar` itself was not working on vercel in various forms,
+I finally got it working locally, but not on the server, this should be fine for the demonstration of utility but needs more work.
+
+## Many projects and files
+We have too many different projects and files to integrate and document.
+It would be nice to be able to summarize this with the llms. 
+We would like to have issues, pull requests and readmes for all project that can be summarized.
+each one would be displayed as part of a presentation, so the issue browser becomes the presentation if we give them ordering, say in a naming convention to sort them by attribute like priority or urgency.
+
+So I am rewriting and integrating all the code into this gui:
+
+### Collecting cpu prof json files 
+One part of the process is to download and prepare the inputs
+The next part is to summarize and report. 
+We separate those with the cache filesystem which is the interface.
+
+# Ideas
+
+## Extract summary from 
+### project
+### commit
+### https post rest json api route
+
+## Make a better version of this page with AI
+Have an AI Improve button on each page that would also include parts 
+of the state that are not sensitive in a recording of a "Use Case"

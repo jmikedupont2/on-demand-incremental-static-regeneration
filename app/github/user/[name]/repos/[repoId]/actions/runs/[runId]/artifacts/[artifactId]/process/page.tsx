@@ -57,7 +57,7 @@ const ArtifactDisplay: React.FC<ArtifactProps> = ({ artifact }) => {
         </li>
         <li>
           <strong>URL:</strong>{" "}
-          <a href={artifact.url} target="_blank" rel="noopener noreferrer">
+          <a href={artifact.url} >
             View Artifact
           </a>
         </li>
@@ -65,8 +65,6 @@ const ArtifactDisplay: React.FC<ArtifactProps> = ({ artifact }) => {
           <strong>Download URL:</strong>{" "}
           <a
             href={rewriteDownloadUrl(artifact.archive_download_url)}
-            target="_blank"
-            rel="noopener noreferrer"
           >
             Download
           </a>
