@@ -31,106 +31,8 @@ const processProfile = (profile: any, start: number): any => {
   // implementation...
 };
 
-// Interfaces for the CPU profile structure
-interface CallFrame {
-  functionName: string;
-  scriptId: string;
-  url: string;
-  lineNumber: number;
-  columnNumber: number;
-}
-
-interface ProfileNode {
-  id: number;
-  callFrame: CallFrame;
-  hitCount: number;
-  children?: number[];
-}
-
-interface CPUProfile {
-  nodes: ProfileNode[];
-  startTime: number;
-  endTime: number;
-  samples: number[];
-  timeDeltas?: number[];
-}
-
-// Props for the TreeNode component
-interface TreeNodeProps {
-  node: ProfileNode;
-  childrenMap: Map<number, ProfileNode[]>;
-}
 
 // TreeNode component: Recursively renders nodes
-const TreeNode: React.FC<TreeNodeProps> = ({ node, childrenMap }) => {
-  //const [expanded, setExpanded] = useState(false);
-
-  const children = childrenMap.get(node.id) || [];
-  const expanded = true;
-  return (
-    <div style={{ marginLeft: 20 }}>
-      <div  style={{ cursor: "pointer" }}>
-        {children.length > 0 ? (expanded ? "▼ " : "▶ ") : "• "}
-        <strong>{node.callFrame.functionName || "(anonymous)"}</strong>{" "}
-        (hitCount: {node.hitCount})
-      </div>
-      {expanded && (
-        <div>
-          {children.map((child) => (
-            <TreeNode key={child.id} node={child} childrenMap={childrenMap} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// CPUProfileTree component: Renders the entire tree
-const CPUProfileTree: React.FC<{ profile: CPUProfile }> = ({ profile }) => {
-  // Build a map of node ID to its children for easy lookup
-  const childrenMap = new Map<number, ProfileNode[]>();
-  profile.nodes.forEach((node) => {
-    if (node.children) {
-      node.children.forEach((childId) => {
-        if (!childrenMap.has(node.id)) {
-          childrenMap.set(node.id, []);
-        }
-        const childNode = profile.nodes.find((n) => n.id === childId);
-        if (childNode) {
-          childrenMap.get(node.id)!.push(childNode);
-        }
-      });
-    }
-  });
-
-  // Find the root nodes (nodes with no parents)
-  const rootNodes = profile.nodes.filter(
-    (node) =>
-      !profile.nodes.some((parentNode) =>
-        parentNode.children?.includes(node.id)
-      )
-  );
-
-  return (
-    <div>
-      <h1>CPU Profile Tree</h1>
-      <p>
-        Profile Duration: {(profile.endTime - profile.startTime) / 1000} ms
-      </p>
-      <div>
-        {rootNodes.map((rootNode) => (
-          <TreeNode
-            key={rootNode.id}
-            node={rootNode}
-            childrenMap={childrenMap}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-
 
 export default async function ReportingComponent(){
   //  const [functionSums, setFunctionSums] = useState<FunctionSums>({});
@@ -178,7 +80,9 @@ export default async function ReportingComponent(){
     const key = a.pathName;
     return (
       <li key={key}>{key}
-	      <CPUProfileTree profile={a.profileData}></CPUProfileTree>
+	      {
+        // <CPUProfileTree profile={a.profileData}></CPUProfileTree>
+        }
 	    </li>)    
     }
     

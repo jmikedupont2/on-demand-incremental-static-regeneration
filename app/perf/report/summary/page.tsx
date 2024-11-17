@@ -1,15 +1,10 @@
 "use client"
-// components/ReportingComponent.tsx
 import { useState, useEffect } from 'react';
-//import { createObjectCsvWriter } from 'csv-writer';
-//import Papa from 'papaparse';
-//import camelCaseSplit from '../utils/camelCaseSplit';
 
 interface Stats {
   total: number;
   count: number;
 }
-
 
 const pivotFunctionStats = (functionStats: FunctionStatsWithGit): PivotTable => {
   const gitUrls = Object.values(functionStats).reduce((acc, gitStats) => {
@@ -18,9 +13,7 @@ const pivotFunctionStats = (functionStats: FunctionStatsWithGit): PivotTable => 
     });
     return acc;
   }, {});
-
   const pivotTable: PivotTable = {};
-
   Object.keys(functionStats).forEach((functionKey) => {
     pivotTable[functionKey] = {};
     for (let gitUrl in gitUrls) {
@@ -28,7 +21,6 @@ const pivotFunctionStats = (functionStats: FunctionStatsWithGit): PivotTable => 
       pivotTable[functionKey][gitUrl] = stats? stats.total : 0;
     }
   });
-
   return pivotTable;
 };
 
@@ -42,14 +34,12 @@ const processRecord = (record: string[], functionSums: FunctionStatsWithGit) => 
     const rowCount = Number(record[3]);
     const minCount = Number(record[4]);
     const maxCount = Number(record[5]);
-
     const results: { [key: string]: number } = {};
     results[fname] = 1; // Process the full name
     //const split1 = camelCaseSplit(fname);
     //for (let n in split1) {
     //  results[split1[n]] = 1; // Process its parts
    // }
-
     for (let name in results) {
       if (!functionSums[name]) {
         functionSums[name] = {};
