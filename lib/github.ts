@@ -466,6 +466,7 @@ export async function fetchGitHubStream(path: string): Promise<string> {
 
   if (fs.existsSync(cachePath)) {
     console.log(`Cache exists at ${cachePath}, skipping fetch.`);
+    return cachePath;
   }
 
   let req = await createGitHubRequest(path, accessToken, {});
@@ -491,7 +492,7 @@ export async function fetchGitHubStream(path: string): Promise<string> {
       if (err) {
         console.error("Error writing file", err);
       } else {
-        console.log("File saved to cache");
+        console.log("File saved to cache",cachePath);
       }
     });
     });
