@@ -1,6 +1,5 @@
-import { ReactNode } from "react"
-
-import { fetchWorkflow, Workflow } from "../../../../../../../../../lib/github"
+//import { ReactNode } from "react"
+import { fetchWorkflow, Workflow } from "@/lib/github"
 export default async function Page(
   {
     params,

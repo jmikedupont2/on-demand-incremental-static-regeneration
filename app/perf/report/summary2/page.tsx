@@ -72,8 +72,8 @@ export default async function ReportingComponent(){
   //});
   //processPerfData();
   function foo(a){
-    console.log(a);
-    const key = a.filename;
+    //console.log(a);
+    const key = a.pathName;
     return (<li key={key}>{key}</li>)    
     }
     

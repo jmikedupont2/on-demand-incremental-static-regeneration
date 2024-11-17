@@ -1,7 +1,7 @@
 //"use client"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 //import { useState, useEffect } from "react";
-import { fetchRuns, WorkflowRun } from "../../../../../../../../lib/github"
+import { fetchRuns, WorkflowRun } from "@/lib/github"
 //import { fetchActionData, fetchRunDetails, getJobs } from "../../../../../../../../lib/github"
 import { Badge} from "@/components/ui/badge"
 export default async function Page(

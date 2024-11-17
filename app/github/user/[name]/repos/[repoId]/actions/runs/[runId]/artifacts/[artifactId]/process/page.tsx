@@ -1,6 +1,6 @@
-import Link from "next/link";
+//import Link from "next/link";
 import { fetchGithubArtifact } from "@/lib/github";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+//import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 type ArtifactProps = {
   artifact: {

@@ -1,61 +1,81 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-function getLayer(dirName) {
-  const dirs = fs.readdirSync(dirName)
-    .map(name => path.join(dirName, name))
-    .filter(dir => fs.statSync(dir).isDirectory());
+export interface DirObj{
+  pathName:string,// the relative path from project root
+  owner?:string, // user or org
+  repo?:string,// git repo name
+  run?:string, // runid
+  cpuProfile?:string, // profile obj
+  profileData?:any, // blob of profile data
+  error?:any  // was there an error
+}
+function getLayerCommon(dirObj:DirObj,keyName:string) {
+  //console.log("getLayerCommon",dirObj);
+  function doSplit(name){
+    let obj:DirObj= {
+      //keyName:name,
+      pathName:path.join(dirObj.pathName, name)
+    }
+    obj[keyName]=name;
+    //console.log("example",obj);
+    return obj;
+  }
+  const dirs:DirObj[] = fs.readdirSync(dirObj.pathName)
+    .map(doSplit)
+  //  console.log("DEBUG",dirs);
   return dirs;
 }
 
-function getCpuProf(dirName) {
-  const dirs = fs.readdirSync(dirName)
-    .map(name => path.join(dirName, name))
-    .filter(dir => fs.statSync(dir).isFile())
-    .filter(dir => dir.endsWith("cpuprofile"));  
-  return dirs;
+function getLayer(dirObj:DirObj,keyName) {
+  return getLayerCommon(dirObj,keyName)
+    .filter(dir => fs.statSync(dir.pathName).isDirectory());
+}
+
+function getCpuProf(dirObj:DirObj) {
+  return getLayerCommon(dirObj,"cpuprofile")
+    .filter(dir => fs.statSync(dir.pathName).isFile())
+    .filter(dir => dir.pathName.endsWith("cpuprofile"));  
+}
+
+function readJson(path:DirObj): DirObj {
+  try {
+    const content = fs.readFileSync(path.pathName, 'utf8');
+    path.profileData = JSON.parse(content);
+  } catch (error) {
+    path.error = error    
+  }
+  return path;
 }
 
 export async function fetchPerfData(//id: string, user: string, repoId: string
 ) {
-  const rootDirectory = './cache/';
-  const subdirs = getLayer(rootDirectory);
-  const results = [];
-  
-  for (const subdir of subdirs) {
-    //const perfDataPath = path.join(subdir, 'profile');
-    const repoDirs = getLayer(subdir);
-    for (const userDir of repoDirs) {
-      //console.log();
-      const repoDirs = getLayer(userDir);
-      for (const repoDir of repoDirs) {
-	const actions = getLayer(repoDir);
-	for (const action of actions) {
-	  const artifacts = getLayer(action);
-	  for (const artifact of artifacts) {
-	    const runs = getLayer(artifact);
-	    for (const run of runs) {
-	      const runattrs = getLayer(run);
-	      for (const runattr of runattrs) {
-		const profiles = getLayer(runattr);
-		for (const profile of profiles) {
-		  //console.log('debug1',profile);
-		  const cpu_profiles = getCpuProf(profile);
-		  //console.log('cpu',cpu_profiles);
-		  for (const cpu_profile of cpu_profiles) {
-		    //console.log('item',cpu_profile);
-		    results.push({ "filename": cpu_profile })
-		  }
-		}
-	      }
-	    }
-	  }
-	}
-	
+  const rootDirectory = {pathName:'./cache/repos/',
+    "root":"repos"};
+  const repoDirs = getLayer(rootDirectory,"owner");
+  const results:any[] = [];
+  for (const userDir of repoDirs) {
+    const repoDirs = getLayer(userDir,"repo");
+    for (const repoDir of repoDirs) {
+      const actions=repoDir.pathName + "/actions";
+      const artifact=actions + "/artifacts";
+      const runs = getLayer({pathName:artifact},"run");
+      for (const run of runs) {
+        const runattr = run.pathName + "/zip";
+        const profile = runattr + "/profile"; // this is specific to how we store the tar file
+        const profileObj =  Object.assign({},repoDirs,userDir, repoDir,run, {  pathName:profile});	  
+        const cpu_profiles = getCpuProf(profileObj);
+        for (const cpu_profile of cpu_profiles) {
+
+	  let profile = Object.assign(profileObj,cpu_profile);
+	  profile = readJson(profile)
+	  console.log(profile)
+	  results.push(profile);
+        }          
       }
     }
   }
-  console.log("results",results);
+  //console.log("results",results);
   return results;
 }
 

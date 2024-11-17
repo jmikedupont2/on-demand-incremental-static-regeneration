@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchRepoList } from "../../../../../lib/github";
+import { fetchRepoList } from "@/lib/github";
 
 export async function RepoList(perPage) {
   const { repos } = await fetchRepoList(perPage);

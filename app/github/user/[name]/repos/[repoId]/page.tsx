@@ -1,11 +1,9 @@
-import styles from '../../../../../../styles/Home.module.scss';
+import styles from '@styles/Home.module.scss';
 import Link from "next/link";
 import { Suspense } from "react";
-import { fetchIssueAndRepoData } from "../../../../../../lib/github"
-import { CommentIcon, ForkIcon, GitHubIcon, IssueIcon, StarIcon } from '../../../../../icons';
-import { Time } from '../../../../../time-ago';
-//import { GitHubIcon, ForkIcon, StarIcon, IssueIcon, CommentIcon } from "../../../../../../icons";
-//import { Time } from "../../../../../../time-ago";
+import { fetchIssueAndRepoData } from "@/lib/github"
+import { CommentIcon, ForkIcon, GitHubIcon, IssueIcon, StarIcon } from '@/app/icons';
+import { Time } from '@/app/time-ago';
 
 // app/github/user/[name]/repos/[repoId]/
 export default async function Page(

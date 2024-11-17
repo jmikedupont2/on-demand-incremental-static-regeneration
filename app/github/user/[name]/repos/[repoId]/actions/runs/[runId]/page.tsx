@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchRunDetails, fetchRuns } from "../../../../../../../../../lib/github";
+import { fetchRunDetails, fetchRuns } from "@/lib/github";
 
 function mapJobs(a){return (<div key={a.id}>{a.name}</div>)}
 

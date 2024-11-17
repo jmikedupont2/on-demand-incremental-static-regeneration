@@ -82,16 +82,32 @@ each one would be displayed as part of a presentation, so the issue browser beco
 
 So I am rewriting and integrating all the code into this gui:
 
+
+
 ### Collecting cpu prof json files 
 One part of the process is to download and prepare the inputs
 The next part is to summarize and report. 
 We separate those with the cache filesystem which is the interface.
 
+#### Reporting 
+Now we have the files collected and we are loading them in json
+
 # Ideas
+
+### Filter
+
+Be able to filter the data read in by different tag
+directory structure for example
 
 ## Extract summary from 
 ### project
 ### commit
+
+## Extract terms and tags
+vectorize and summarize tags by rolling up resource usage and profile data across the tokenization.
+distribute the perf information to all tokens and vectors of the internal model, and then summarize it by
+that internal model keys.
+
 ### https post rest json api route
 
 ## Make a better version of this page with AI
