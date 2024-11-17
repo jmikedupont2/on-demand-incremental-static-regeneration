@@ -55,11 +55,11 @@ async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
   console.log("unzipfile",zipFilePath,destPath)
   
   return new Promise((resolve, reject) => {
-    console.log("in promise");
+    //console.log("in promise");
     const unzipStream = fs.createReadStream(zipFilePath).pipe(unzip.Extract({ path: destPath }));
     unzipStream.on('close', resolve);
     unzipStream.on('error', reject);
-    console.log("return", unzipStream);
+    //console.log("return", unzipStream);
   });
 }
 
@@ -78,7 +78,7 @@ async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
 //   console.log("Tar extraction complete");
 // }
 
-const pipelineAsync = promisify(pipeline);
+//const pipelineAsync = promisify(pipeline);
 
 export type TarballDetails = {
   fileCount: number;
@@ -87,174 +87,174 @@ export type TarballDetails = {
 };
 
 
-async function processTarGz(tarpath: string): Promise<string[][]> {
-  const functionSequences: string[][] = [];
-  const fileContents = new Map<string, Buffer>();
-  await new Promise((resolve, reject) => {
-    //const extract = tar.extract();
-    const fileStream = fs.createReadStream(tarpath).pipe(zlib.createGunzip());
-    //extract.on('entry', async (header, stream, next) => {
-//      if (header.type === 'File' && header.path.endsWith('cpuprofile')) {
-//	const chunks: any[] = [];
-//	if (header) {
-	  //header.on('data', (chunk:any) =>{
-//	    chunks.push(Buffer.from(chunk))
-	  //});
-	  //header.on('end', () =>{
-//	    let jsonContent:string = Buffer.concat(chunks).toString("utf-8");
-	    //const profile = JSON.parse(jsonContent);
-	    //let report = {};
-      //console.log("debug", profile);
-	    //let res = process(tarpath,profile,0,0,report);
-	    //console.log("check",tarpath + ".parquet");
-	    //writeFunctionStatsToCSV(report,tarpath + ".csv");
-	    //writeFunctionStatsToParquet(report,tarpath + ".parquet");
-	    //writeFunctionStatsToJSON(report,tarpath + ".json");
+// async function processTarGz(tarpath: string): Promise<string[][]> {
+//   const functionSequences: string[][] = [];
+//   const fileContents = new Map<string, Buffer>();
+//   await new Promise((resolve, reject) => {
+//     //const extract = tar.extract();
+//     const fileStream = fs.createReadStream(tarpath).pipe(zlib.createGunzip());
+//     //extract.on('entry', async (header, stream, next) => {
+// //      if (header.type === 'File' && header.path.endsWith('cpuprofile')) {
+// //	const chunks: any[] = [];
+// //	if (header) {
+// 	  //header.on('data', (chunk:any) =>{
+// //	    chunks.push(Buffer.from(chunk))
+// 	  //});
+// 	  //header.on('end', () =>{
+// //	    let jsonContent:string = Buffer.concat(chunks).toString("utf-8");
+// 	    //const profile = JSON.parse(jsonContent);
+// 	    //let report = {};
+//       //console.log("debug", profile);
+// 	    //let res = process(tarpath,profile,0,0,report);
+// 	    //console.log("check",tarpath + ".parquet");
+// 	    //writeFunctionStatsToCSV(report,tarpath + ".csv");
+// 	    //writeFunctionStatsToParquet(report,tarpath + ".parquet");
+// 	    //writeFunctionStatsToJSON(report,tarpath + ".json");
 	    
-	    //console.log(header.path,res);
-	  //});
-	//}
-      //}
-    //});
-   // extract.on('finish', resolve);
-    //extract.on('error', reject);
-   // fileStream.pipe(extract);
-  });
+// 	    //console.log(header.path,res);
+// 	  //});
+// 	//}
+//       //}
+//     //});
+//    // extract.on('finish', resolve);
+//     //extract.on('error', reject);
+//    // fileStream.pipe(extract);
+//   });
 
-  // Process files in sorted order
-  const sortedFiles = Array.from(fileContents.keys()).sort();
+//   // Process files in sorted order
+//   const sortedFiles = Array.from(fileContents.keys()).sort();
 
-  for (const fileName of sortedFiles) {
-    const content = fileContents.get(fileName)!;
+//   for (const fileName of sortedFiles) {
+//     const content = fileContents.get(fileName)!;
 
-    try {
-      const jsonContent = content.toString('utf8');
-      const profile = JSON.parse(jsonContent);
+//     try {
+//       const jsonContent = content.toString('utf8');
+//       const profile = JSON.parse(jsonContent);
 
-      //console.log(profile);
-    } catch (error) {
-      console.warn(`Failed to process ${fileName}: ${error}`);
-      continue;
-    }
-  }
+//       //console.log(profile);
+//     } catch (error) {
+//       console.warn(`Failed to process ${fileName}: ${error}`);
+//       continue;
+//     }
+//   }
 
-  return functionSequences;
-}
-async function extractTarGz(tarpath: string, extractPath: string): Promise<void> {
-  console.log("extractTarGz",tarpath);
-  return new Promise((resolve, reject) => {
-    //fs.mkdirSync(extractPath, { recursive: true });
-    fs.createReadStream(tarpath)
-      .pipe(zlib.createGunzip())
-      //.pipe(tar.extract({ cwd: extractPath }))
-      .on('end', resolve)
-      .on('error', reject);
-  });
-}
+//   return functionSequences;
+// }
+// async function extractTarGz(tarpath: string, extractPath: string): Promise<void> {
+//   console.log("extractTarGz",tarpath);
+//   return new Promise((resolve, reject) => {
+//     //fs.mkdirSync(extractPath, { recursive: true });
+//     fs.createReadStream(tarpath)
+//       .pipe(zlib.createGunzip())
+//       //.pipe(tar.extract({ cwd: extractPath }))
+//       .on('end', resolve)
+//       .on('error', reject);
+//   });
+// }
 
-export async function unpackTarballBad(
-  tarFilepath: string,
-  dest: string
-): Promise<TarballDetails> {
-  let fileCount = 0;
-  let unpackedSize = 0;
-  const parsedJson: Record<string, any> = {};
-  //  const readable = createReadStream(tarFilepath);
-  //const unpack = tarStream.extract();
+// export async function unpackTarballBad(
+//   tarFilepath: string,
+//   dest: string
+// ): Promise<TarballDetails> {
+//   let fileCount = 0;
+//   let unpackedSize = 0;
+//   const parsedJson: Record<string, any> = {};
+//   //  const readable = createReadStream(tarFilepath);
+//   //const unpack = tarStream.extract();
 
-  //return new Promise((resolve, reject) => {
-  console.log("pipe:");
-  function foo(data:any){
-    console.log("foo",data);
-  }
+//   //return new Promise((resolve, reject) => {
+//   console.log("pipe:");
+//   function foo(data:any){
+//     console.log("foo",data);
+//   }
 
-  //async function 
-  //  const p = new Promise((resolve, reject) => {
-  //    console.log("in promise");
-    const unzipStream = fs.createReadStream(tarFilepath)
-      .pipe(zlib.createGunzip())
-      .pipe(tarStream.extract({ //cwd: dest 
-        }))
-    //const unzipStream = fs.createReadStream(zipFilePath).pipe(unzip.Extract({ path: destPath }));
-    unzipStream.on('close', function () {
-      console.log("close");
-  //    resolve(1)
-    });
-    unzipStream.on('error', function (error) {
-      console.log("error",error);
-    //  reject()
-    });
-  console.log("return");
-  //return  undefined;
-  //});
+//   //async function 
+//   //  const p = new Promise((resolve, reject) => {
+//   //    console.log("in promise");
+//     const unzipStream = fs.createReadStream(tarFilepath)
+//       .pipe(zlib.createGunzip())
+//       .pipe(tarStream.extract({ //cwd: dest 
+//         }))
+//     //const unzipStream = fs.createReadStream(zipFilePath).pipe(unzip.Extract({ path: destPath }));
+//     unzipStream.on('close', function () {
+//       console.log("close");
+//   //    resolve(1)
+//     });
+//     unzipStream.on('error', function (error) {
+//       console.log("error",error);
+//     //  reject()
+//     });
+//   console.log("return");
+//   //return  undefined;
+//   //});
   
-    //  const som = readable
-    //    .pipe(gunzip())
-    //    .pipe(unpack)
-  //    .on("entry", (header, stream, next) => {
-      //   fileCount++;
-      //   unpackedSize += Number(header.size);
+//     //  const som = readable
+//     //    .pipe(gunzip())
+//     //    .pipe(unpack)
+//   //    .on("entry", (header, stream, next) => {
+//       //   fileCount++;
+//       //   unpackedSize += Number(header.size);
       
-      //   if (header.name.endsWith(".cpuprofile")) {
-  //      const newname = `${dest}/${header.name.replace("./profile/", "")}`;
-  //      console.log("Processing:", header.name, "->", newname);
-  //    });//.then(foo);
+//       //   if (header.name.endsWith(".cpuprofile")) {
+//   //      const newname = `${dest}/${header.name.replace("./profile/", "")}`;
+//   //      console.log("Processing:", header.name, "->", newname);
+//   //    });//.then(foo);
   
-    //om.then(foo);
-  //  console.log("som:",som);
-      //     let data = "";
-      //     const file = createWriteStream(newname);
+//     //om.then(foo);
+//   //  console.log("som:",som);
+//       //     let data = "";
+//       //     const file = createWriteStream(newname);
 
-      //     // Pipe the stream to the file
-      //     stream.pipe(file);
+//       //     // Pipe the stream to the file
+//       //     stream.pipe(file);
 
-      //     // Collect data for JSON parsing
-      //     stream.on("data", (chunk) => {
-      //       data += chunk.toString();
-      //     });
+//       //     // Collect data for JSON parsing
+//       //     stream.on("data", (chunk) => {
+//       //       data += chunk.toString();
+//       //     });
 
-      //     stream.on("end", () => {
-      //       try {
-      //         parsedJson[header.name] = JSON.parse(data);
-      //         console.log(`Parsed JSON from ${header.name}`);
-      //       } catch (err) {
-      //         console.error(`Error parsing JSON from ${header.name}:`, err);
-      //       }
-      //       next(); // Proceed to the next entry
-      //});
+//       //     stream.on("end", () => {
+//       //       try {
+//       //         parsedJson[header.name] = JSON.parse(data);
+//       //         console.log(`Parsed JSON from ${header.name}`);
+//       //       } catch (err) {
+//       //         console.error(`Error parsing JSON from ${header.name}:`, err);
+//       //       }
+//       //       next(); // Proceed to the next entry
+//       //});
 
-      //     stream.on("error", (err) => {
-      //       console.error(`Stream error for ${header.name}:`, err);
-      //       next(); // Ensure the pipeline doesn't hang
-      //     });
-      //   } else {
-      //     // For non-JSON files, just resume the stream
-      //     stream.resume();
-      //     next();
-      //   }
-      // })
-      // .on("finish", () => {
-      //   console.log("Extraction complete");
-      //   resolve({
-      //     fileCount,
-      //     unpackedSize,
-      //     parsedJson,
-      //   });
-      // })
-      // .on("error", (err) => {
-      //   console.error("Error during extraction:", err);
-      //   reject(err);
-      // });
-  //});
-  //console.log("pipe1");
+//       //     stream.on("error", (err) => {
+//       //       console.error(`Stream error for ${header.name}:`, err);
+//       //       next(); // Ensure the pipeline doesn't hang
+//       //     });
+//       //   } else {
+//       //     // For non-JSON files, just resume the stream
+//       //     stream.resume();
+//       //     next();
+//       //   }
+//       // })
+//       // .on("finish", () => {
+//       //   console.log("Extraction complete");
+//       //   resolve({
+//       //     fileCount,
+//       //     unpackedSize,
+//       //     parsedJson,
+//       //   });
+//       // })
+//       // .on("error", (err) => {
+//       //   console.error("Error during extraction:", err);
+//       //   reject(err);
+//       // });
+//   //});
+//   //console.log("pipe1");
   
-    return {
-      fileCount:0,
-      unpackedSize:0,
-      parsedJson:{}
-    }
-  //return 
-}
+//     return {
+//       fileCount:0,
+//       unpackedSize:0,
+//       parsedJson:{}
+//     }
+//   //return 
+// }
 
 // import gunzipMaybe from 'gunzip-maybe';
 // import { Readable } from 'stream';
@@ -266,7 +266,7 @@ export type TarballDetails2 = {
   unpackedSize: number; // in bytes
 };
 
-async function unTarNative(filePath, extractPath) {
+async function unTarNative(filePath:string, extractPath:string): Promise<void> {
   if (!filePath ||!extractPath) {
     throw new Error('File path or extract path not defined.');
   }
@@ -278,7 +278,7 @@ async function unTarNative(filePath, extractPath) {
         if (error) {
           reject(error);
         } else {
-	  console.log("stdout", stdout)
+	        console.log("stdout", stdout)
           resolve({ stdout, stderr });
         }
       });
@@ -288,33 +288,33 @@ async function unTarNative(filePath, extractPath) {
   }
 }
 
-export async function getTarballDetails(tarFilepath:string): Promise<TarballDetails2> {
-  let fileCount = 0;
-  let unpackedSize = 0;
-  //const readable = Readable.from(buffer);
-  const readable = createReadStream(tarFilepath);
-  const unpack = tarStream.extract();
-  return new Promise((resolve, reject) => {
-    readable
-      .pipe(gunzip())
-      .pipe(unpack)
-      .on('entry', (header, stream, next) => {
-        fileCount++;
-	console.log("entry",header);
-        //unpackedSize += Number(header.size);
-	stream.resume(); // important to ensure that "entry" events keep firing
-	next();
-      })
-      .on('finish', () => {
-	console.log("finish");
-        resolve({
-          fileCount,
-          unpackedSize,
-        });
-      })
-      .on('error', reject);
-  });
-}
+// export async function getTarballDetails(tarFilepath:string): Promise<TarballDetails2> {
+//   let fileCount = 0;
+//   let unpackedSize = 0;
+//   //const readable = Readable.from(buffer);
+//   const readable = createReadStream(tarFilepath);
+//   const unpack = tarStream.extract();
+//   return new Promise((resolve, reject) => {
+//     readable
+//       .pipe(gunzip())
+//       .pipe(unpack)
+//       .on('entry', (header, stream, next) => {
+//         fileCount++;
+// 	console.log("entry",header);
+//         //unpackedSize += Number(header.size);
+// 	stream.resume(); // important to ensure that "entry" events keep firing
+// 	next();
+//       })
+//       .on('finish', () => {
+// 	console.log("finish");
+//         resolve({
+//           fileCount,
+//           unpackedSize,
+//         });
+//       })
+//       .on('error', reject);
+//   });
+// }
 
 // this hangs randomly
 // // from github.com/verdaccio/versaccio
@@ -401,7 +401,7 @@ async function processJsonFiles(directory: string): Promise<any[]> {
       const jsonData = await fs.promises.readFile(filePath, 'utf-8');
       const parsedJson = JSON.parse(jsonData);
       parsedJson.fileName = file;
-      console.log("Parsed JSON blob:", parsedJson);
+      //console.log("Parsed JSON blob:", parsedJson);
       profiles.push(parsedJson)
       // Further processing can be done here
     }
@@ -413,9 +413,13 @@ async function processJsonFiles(directory: string): Promise<any[]> {
 export async function readZip(path: string, filename:string) {
   const zipFilePath = path + filename;
   console.log("readzip",zipFilePath,path);
+  if (!fs.existsSync(zipFilePath)) {
+    console.log("Cannot find",zipFilePath);
+  }
   // Step 1: Unzip the file
   const tarFilePath = path + "/perf.data.tar.gz";
   if (!fs.existsSync(tarFilePath)) {
+    
     console.log("going to unzip",zipFilePath, " to get ", tarFilePath);
     await unzipFile(zipFilePath, path);
     console.log("Unzip complete");
@@ -455,6 +459,6 @@ export async function processFile(path: string): Promise<CPUProfile[]> {
 export async function fetchArtifactZip(username: string, reponame: string, artifactId:string): Promise<CPUProfile[]> {
   console.log("DEBUG1",username,reponame,artifactId)
   const response = await processFile(`/repos/${username}/${reponame}/actions/artifacts/${artifactId}/zip` );
-  console.log("RES",response);
+  //console.log("RES",response);
   return  response;
 }

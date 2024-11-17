@@ -487,6 +487,8 @@ export async function fetchGitHubStream(path: string): Promise<string> {
       console.error("Error creating cache directory", err);
       return;
     }
+    console.log("wrote to", newpath);
+    
     // Write file to the cache
     fs.writeFile(cachePath, buffer, (err) => {
       if (err) {
