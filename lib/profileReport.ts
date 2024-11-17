@@ -318,9 +318,9 @@ export async function getTarballDetails(tarFilepath:string): Promise<TarballDeta
 
 // this hangs randomly
 // // from github.com/verdaccio/versaccio
- export async function unpackTarball(tarFilepath: string, dest:string): Promise<TarballDetails> {
-   let fileCount = 0;
-   let unpackedSize = 0;
+ //export async function unpackTarball(tarFilepath: string, dest:string): Promise<TarballDetails> {
+//   let fileCount = 0;
+   //let unpackedSize = 0;
  
 //   return new Promise((resolve, reject) => {
 //     let parsedJson ={};
@@ -363,7 +363,7 @@ export async function getTarballDetails(tarFilepath:string): Promise<TarballDeta
 //       //     return reject;
 //       //   });
 //   });
- }
+ //}
 
 async function untarFile(tarFilePath: string, destPath: string): Promise<void> {
   console.log("unTar", tarFilePath, destPath);
