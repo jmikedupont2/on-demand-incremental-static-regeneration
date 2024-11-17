@@ -29,3 +29,39 @@ export interface TreeNodeProps {
   node: ProfileNode;
   childrenMap: Map<number, ProfileNode[]>;
 }
+
+export interface ProcessedData {
+  //directory: string;
+  functionSequences: string[][];
+}
+
+export interface Total {
+  total: number;
+  count: number;
+  min: number;
+  max: number;
+};
+
+export interface FunctionSums {
+  [key: string]: Total
+}
+export type TarballDetails = {
+  fileCount: number;
+  unpackedSize: number; // in bytes
+  parsedJson: Record<string, any>; // Object to store parsed JSON trees
+};
+
+export type TarballDetails2 = {
+  fileCount: number;
+  unpackedSize: number; // in bytes
+};
+
+export interface DirObj{
+  pathName:string,// the relative path from project root
+  owner?:string, // user or org
+  repo?:string,// git repo name
+  run?:string, // runid
+  cpuProfile?:string, // profile obj
+  profileData?:CPUProfile, // blob of profile data
+  error?:any  // was there an error
+}

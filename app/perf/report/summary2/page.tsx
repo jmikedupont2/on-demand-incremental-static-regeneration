@@ -1,39 +1,25 @@
 //"use client";
-// components/ReportingComponent.tsx
-//import { useState, useEffect } from 'react';
-//import * as fs from 'node:fs';
 import * as path from 'path';
 import React from 'react';
-//import React, { useState } from "react";
 import { fetchPerfData } from '@/lib/filesystem/collect_perf_files';
-//import * as tar from 'tar';
-//import * as zlib from 'zlib';
+import { CPUProfile, DirObj, FunctionSums, ProcessedData } from '@/lib/profileTypes';
+import { processPerfData, processProfile } from '@/lib/reporting/firstSummaryReport';
 
-//export async function getServerSideProps(context) {
+/*
+requirements:
 
-//}
+1. summarize the stream of profile data by different keys
+1.1. extract a set of keys from each record, these can be either grouped into :
+columns or rows or values or skip. every key will be accounted for.
+1.2. for the columns collect the values for each row creating a vector.
+1.3. then book all the columns to a single row.
+so result will be a pivot table: row keys, columns, values.
+we will create a total row and column.
 
-interface ProcessedData {
-  //directory: string;
-  functionSequences: string[][];
-}
-
-interface FunctionSums {
-  [key: string]: {
-    total: number;
-    count: number;
-    min: number;
-    max: number;
-  };
-}
-
-const processProfile = (profile: any, start: number): any => {
-  // implementation...
-};
-
-
-// TreeNode component: Recursively renders nodes
-
+the first pivot table will be a total with one row and column.
+then we will add in the top N features as columns.
+then will split those by top M row features.
+ */
 export default async function ReportingComponent(){
   //  const [functionSums, setFunctionSums] = useState<FunctionSums>({});
   //  const [functionSums2, setFunctionSums2] = useState<FunctionSums>({});
@@ -41,9 +27,34 @@ export default async function ReportingComponent(){
   //  const [results, setResults] = useState<ProcessedData[]>([]);
   const results:ProcessedData[] = [];
 
-  const perfdata = await fetchPerfData();
-  //console.log(perfdata);
+  const perfdata:DirObj[] = await fetchPerfData();
+
+  function processProfileMaybe(x:DirObj): any {    
+    if (x.profileData)
+      {
+        let {
+          total, 
+          functionSums,
+          functionSums2,
+        } = processProfile(x.profileData, 0, 0, 10000);
+        let res = processPerfData(total);
+        //console.log("check summary res",res)
+	//	console.log("check summary x",x)
+	console.log("check summary total",total)
+        let data = total;
+        data.run = x.run;
+        data.repo = x.repo;
+        data.owner = x.owner;        
+        data.cpuProfile =  x.cpuProfile;
+	data.functionProfile = res;
+        return data;
+      }
+  }   
+  const sums = perfdata.map(processProfileMaybe);
+
+  console.log("Sums",sums);
   
+  //sums.map(emitSum);
   // //  useEffect(() => {
   //   const rootDirectory = './data2/';
   // async  function processPerfData (){      
@@ -80,18 +91,36 @@ export default async function ReportingComponent(){
     const key = a.pathName;
     return (
       <li key={key}>{key}
+  <div>Test
 	      {
         // <CPUProfileTree profile={a.profileData}></CPUProfileTree>
-        }
+              }
+  </div>
 	    </li>)    
     }
-    
+
+
+  function foo2(a){
+    console.log("FOO2",a);
+    const key = a.owner + a.repo + a.run;
+    return (
+      <li key={key}>{key}
+  <div>Test
+	      {
+        JSON.stringify(a)
+        // <CPUProfileTree profile={a.profileData}></CPUProfileTree>
+              }
+  </div>
+	    </li>)    
+    }
+
   return (
     <div>
       <h1>Reporting Component</h1>
       <ul key="files">
 	{
-	  perfdata.map(foo)
+	  //perfdata.map(foo)
+	  sums.map(foo2)
 	}
       </ul>
       <p>Function Sums:</p>
@@ -121,5 +150,3 @@ export default async function ReportingComponent(){
     </div>
   );
 };
-
-

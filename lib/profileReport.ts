@@ -19,16 +19,6 @@ async function unzipFile(zipFilePath: string, destPath: string): Promise<void> {
   });
 }
 
-export type TarballDetails = {
-  fileCount: number;
-  unpackedSize: number; // in bytes
-  parsedJson: Record<string, any>; // Object to store parsed JSON trees
-};
-
-export type TarballDetails2 = {
-  fileCount: number;
-  unpackedSize: number; // in bytes
-};
 
 async function unTarNative(filePath:string, extractPath:string): Promise<void> {
   if (!filePath ||!extractPath) {
