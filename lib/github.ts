@@ -1,16 +1,24 @@
 import 'server-only';
 import jwt from 'jsonwebtoken';
 import { notFound } from 'next/navigation';
+
 //import { finished, Readable } from 'stream';
 //import AdmZip from 'adm-zip';
+
 import * as fs from 'fs';
 
-
-
-// FIXME: remove constant
+// FIXME: remove constant. get the current user and thier orgs
 const ownerList = [ "jmikedupont2","meta-introspector"]
 
 let accessToken:string;
+
+export async function getGithubContent(owner:string,
+  repo: string,
+  branch: string,
+  path: string) {
+    const data = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`);
+    return data.text()
+}
 
 function createGitHubRequest(path: string, token: string, opts: any = {}) {
   return fetch(`https://api.github.com${path}`, {
@@ -133,6 +141,8 @@ export async function setAccessToken() {
   }
 }
 
+
+
 export async function fetchIssueAndRepoData(user:string, repoId:string) {
   const [issues, repoDetails] = await Promise.all([
     fetchGitHub(`/repos/${user}/${repoId}/issues`, accessToken),
@@ -143,6 +153,7 @@ export async function fetchIssueAndRepoData(user:string, repoId:string) {
     issues,
     stargazers_count: repoDetails.stargazers_count,
     forks_count: repoDetails.forks_count,
+    repoDetails: repoDetails
   };
 }
 
