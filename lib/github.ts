@@ -274,8 +274,8 @@ export async function fetchRepoList(perPage) {
   }
   const fetch_all = ownerList.map(fetchGitHubWithToken);
   const repos:RepositoriesResponse = await Promise.all(fetch_all)
-  console.log('[Next.js] Fetching repos');
-  console.log(`[Next.js] Repos: ${repos.length}`);
+  //  console.log('[Next.js] Fetching repos'); this is logged to the front end
+  //  console.log(`[Next.js] Repos: ${repos.length}`);
 
   return {
     ownerList,
