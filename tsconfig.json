@@ -1,29 +1,35 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "strictNullChecks": true
+      "allowJs": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "forceConsistentCasingInFileNames": true,
+      "incremental": true,
+      "incremental": true,
+      "isolatedModules": true,
+      "isolatedModules": true,
+      "jsx": "preserve",
+      "jsx": "preserve",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "noEmit": true,
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "strict": false,
+      "plugins": [
+	  {
+	      "name": "next"
+	  }],
+      "paths": {	      "@/*": ["./*"]},
+      "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",

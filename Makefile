@@ -1,4 +1,5 @@
 
 build:
 	pnpm install  --force
-	pnpm run build
+	#pnpm run build
+	./node_modules/.bin/vercel build --version

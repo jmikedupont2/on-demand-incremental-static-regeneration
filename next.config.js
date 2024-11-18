@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+    //    output:"export", FIXME: for the future generateStaticParams
   images: {
     remotePatterns: [
       {
