@@ -6,12 +6,10 @@ import { CommentIcon, ForkIcon, GitHubIcon, IssueIcon, StarIcon } from '@/app/ic
 import { Time } from '@/app/time-ago';
 
 import React from 'react';
-
-import ReactDOM from 'react-dom'
 import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 
-const Readme: React.FC<{ data: RepositoryDetails }> = async ({ markdown }) => {
+const Readme: React.FC<{ markdown: string }> = async ({ markdown }) => {
   //document.querySelector('#content')
   return(
     <Markdown rehypePlugins={[rehypeHighlight]}>{markdown}</Markdown>
