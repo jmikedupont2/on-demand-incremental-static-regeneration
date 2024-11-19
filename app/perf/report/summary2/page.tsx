@@ -4,6 +4,7 @@ import React from 'react';
 import { fetchPerfData } from '@/lib/filesystem/collect_perf_files';
 import { CPUProfile, DirObj, FunctionSums, ProcessedData } from '@/lib/profileTypes';
 import { processPerfData, processProfile } from '@/lib/reporting/firstSummaryReport';
+import FunctionProfileChart from './functions';
 
 /*
 requirements:
@@ -52,9 +53,9 @@ export default async function ReportingComponent(){
   }   
   const sums = perfdata.map(processProfileMaybe);
 
-  console.log("Sums",sums);
+  //console.log("Sums",sums);
   
-  //sums.map(emitSum);
+  
   // //  useEffect(() => {
   //   const rootDirectory = './data2/';
   // async  function processPerfData (){      
@@ -101,52 +102,32 @@ export default async function ReportingComponent(){
 
 
   function foo2(a){
-    console.log("FOO2",a);
+    //console.log("FOO2",a);
     const key = a.owner + a.repo + a.run;
     return (
       <li key={key}>{key}
   <div>Test
 	      {
-        JSON.stringify(a)
+		//JSON.stringify(a)
         // <CPUProfileTree profile={a.profileData}></CPUProfileTree>
               }
   </div>
 	    </li>)    
     }
 
+  function emitSum(data){
+    //return (<pre>{JSON.stringify(data.functionProfile)}</pre>)
+    return <FunctionProfileChart data={data
+      //.functionProfile
+    }></FunctionProfileChart>
+  }
   return (
     <div>
       <h1>Reporting Component</h1>
-      <ul key="files">
-	{
-	  //perfdata.map(foo)
-	  sums.map(foo2)
-	}
-      </ul>
-      <p>Function Sums:</p>
-      <ul key="sum">
-        {Object.keys(functionSums2).map((functionName, index) => (
-          <li key={index}>
-            {functionName}: {JSON.stringify(functionSums2[functionName])}
-          </li>
-        ))}
-      </ul>
       <p>Results:</p>
-      <ul>
-        {results.map((result, index) => (
-          <li key={index}>
-            <p>Directory: {"result.directory"}</p>
-            <p>Function Sequences:</p>
-            <ul>
-              {result.functionSequences.map((sequence, index) => (
-                <li key={index}>
-                  Sequence {index + 1}: {sequence.join(' -> ')}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      {
+	sums.map(emitSum)
+      }
     </div>
   );
 };

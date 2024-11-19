@@ -9,7 +9,6 @@ import React from 'react';
 import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 
-import axios from 'axios';
 import Head from 'next/head';
 
 const GithubBranches = ({ branches }) => {
