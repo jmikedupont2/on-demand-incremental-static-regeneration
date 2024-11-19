@@ -9,6 +9,27 @@ import React from 'react';
 import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 
+import axios from 'axios';
+import Head from 'next/head';
+
+const GithubBranches = ({ branches }) => {
+  return (
+    <div>
+      <Head>
+        <title>Github Branches</title>
+      </Head>
+      <h1>Github Branches</h1>
+      <ul>
+        {branches.map((branch) => (
+          <li key={branch.name}>{branch.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+
+
 const Readme: React.FC<{ markdown: string }> = async ({ markdown }) => {
   //document.querySelector('#content')
   return(
@@ -110,7 +131,7 @@ export default async function Page(
 {
   const theName = (await params).name;
   const theRepo = (await params).repoId;
-  const { issues, forks_count, stargazers_count, repoDetails } =  await fetchIssueAndRepoData(theName,theRepo);
+  const { issues, forks_count, stargazers_count, repoDetails, branches } =  await fetchIssueAndRepoData(theName,theRepo);
   const base = `/github/user/${theName}/repos/${theRepo}`;
   const external_user = `https://github.com/${theName}`;
   const external_base = `${external_user}/${theRepo}`;
@@ -130,6 +151,9 @@ export default async function Page(
 	</div>
       </div>
       <RepositoryInfo data={repoDetails}></RepositoryInfo>
+      <GithubBranches branches={branches}></GithubBranches>
+      
+      
       <div className={styles.issues}>{issues && issues.map && issues.map((issue: any) => (
 	<Link key={issue.number} href={`/${issue.number}`} className={styles.issue}>
 	  <IssueIcon />
@@ -153,3 +177,6 @@ export default async function Page(
 	  <pre>{JSON.stringify(repoDetails,undefined,2)}</pre>
     </div>)
 }
+
+
+//<pre>{JSON.stringify(branches,undefined,2)}</pre>

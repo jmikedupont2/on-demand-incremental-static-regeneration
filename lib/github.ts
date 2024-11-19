@@ -143,8 +143,11 @@ export async function setAccessToken() {
 
 
 
+
+
 export async function fetchIssueAndRepoData(user:string, repoId:string) {
-  const [issues, repoDetails] = await Promise.all([
+  const [branches,issues, repoDetails] = await Promise.all([
+    fetchGitHub(`/repos/${user}/${repoId}/branches`, accessToken),
     fetchGitHub(`/repos/${user}/${repoId}/issues`, accessToken),
     fetchGitHub(`/repos/${user}/${repoId}`, accessToken)
   ]);
@@ -153,7 +156,8 @@ export async function fetchIssueAndRepoData(user:string, repoId:string) {
     issues,
     stargazers_count: repoDetails.stargazers_count,
     forks_count: repoDetails.forks_count,
-    repoDetails: repoDetails
+    repoDetails: repoDetails,
+    branches,
   };
 }
 
